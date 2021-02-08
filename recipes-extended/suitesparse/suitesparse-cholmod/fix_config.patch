@@ -1,0 +1,20 @@
+--- a/SuiteSparse_config.mk
++++ b/SuiteSparse_config.mk
+@@ -55,7 +55,7 @@
+     # which puts the libraries in /yada/mylibs, include files in /yoda/myinc,
+     # and documentation in /solo/mydox.
+     INSTALL ?= $(SUITESPARSE)
+-    INSTALL_LIB ?= $(INSTALL)/lib
++    INSTALL_LIB ?= $(INSTALL)/$(LIBDIR)
+     INSTALL_INCLUDE ?= $(INSTALL)/include
+     INSTALL_DOC ?= $(INSTALL)/share/doc/suitesparse-$(SUITESPARSE_VERSION)
+ 
+@@ -358,7 +358,7 @@
+ 
+     ifeq ($(UNAME),Linux)
+         # add the realtime library, librt, and SuiteSparse/lib
+-        LDLIBS += -lrt -Wl,-rpath=$(INSTALL_LIB)
++        LDLIBS += -lrt
+     endif
+ 
+     #---------------------------------------------------------------------------

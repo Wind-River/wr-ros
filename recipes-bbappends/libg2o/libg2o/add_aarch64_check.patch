@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8329d44..4278a73 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -223,7 +223,8 @@ macro(DEFINE_SSE_VAR  _setname)
+ endmacro(DEFINE_SSE_VAR)
+ 
+ # SSE optimizations:
+-IF (NOT CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
++IF (NOT CMAKE_SYSTEM_PROCESSOR MATCHES "arm" AND
++    NOT CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+   DEFINE_SSE_VAR(SSE2)
+   DEFINE_SSE_VAR(SSE3)
+   DEFINE_SSE_VAR(SSE4_1)

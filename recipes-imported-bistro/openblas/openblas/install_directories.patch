@@ -1,0 +1,17 @@
+diff --git a/Makefile.install b/Makefile.install
+index 069c96c6..81f85567 100644
+--- a/Makefile.install
++++ b/Makefile.install
+@@ -5,9 +5,9 @@ include ./Makefile.system
+ 
+ PREFIX ?= /opt/OpenBLAS
+ 
+-OPENBLAS_INCLUDE_DIR := $(PREFIX)/include
+-OPENBLAS_LIBRARY_DIR := $(PREFIX)/lib
+-OPENBLAS_BINARY_DIR := $(PREFIX)/bin
++OPENBLAS_INCLUDE_DIR := $(INCLUDEDIR)
++OPENBLAS_LIBRARY_DIR := $(LIBDIR)
++OPENBLAS_BINARY_DIR := $(BINDIR)
+ OPENBLAS_BUILD_DIR := $(CURDIR)
+ OPENBLAS_CMAKE_DIR := $(OPENBLAS_LIBRARY_DIR)/cmake/openblas
+ OPENBLAS_CMAKE_CONFIG := OpenBLASConfig.cmake

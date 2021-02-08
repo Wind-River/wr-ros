@@ -1,0 +1,13 @@
+diff --git a/rviz_ogre_vendor-extras.cmake.in b/rviz_ogre_vendor-extras.cmake.in
+index 0ab09b60..959bcc44 100644
+--- a/rviz_ogre_vendor-extras.cmake.in
++++ b/rviz_ogre_vendor-extras.cmake.in
+@@ -7,7 +7,7 @@ if(WIN32)
+ elseif(APPLE)
+   set(OGRE_DIR "${@PROJECT_NAME@_DIR}/../../../opt/rviz_ogre_vendor/CMake")
+ else()
+-  set(OGRE_DIR "${@PROJECT_NAME@_DIR}/../../../opt/rviz_ogre_vendor/lib/OGRE/cmake")
++  set(OGRE_DIR "${@PROJECT_NAME@_DIR}/../../../lib/OGRE/cmake")
+ endif()
+ message(STATUS "Setting OGRE_DIR to: '${OGRE_DIR}'")
+ 

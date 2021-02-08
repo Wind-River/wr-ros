@@ -1,0 +1,26 @@
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index d2fdf8e..3e9974d 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -10,10 +10,10 @@ target_include_directories(foonathan_memory_profiling PRIVATE
+                             ${FOONATHAN_MEMORY_SOURCE_DIR}/include/foonathan/memory)
+ comp_target_features(foonathan_memory_profiling PUBLIC CPP11)
+ 
+-if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/catch.hpp)
++if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/catch.hpp)
+     file(DOWNLOAD
+          https://raw.githubusercontent.com/catchorg/Catch2/master/single_include/catch2/catch.hpp
+-         ${CMAKE_CURRENT_BINARY_DIR}/catch.hpp
++	 ${CMAKE_CURRENT_SOURCE_DIR}/catch.hpp
+          STATUS status
+          LOG log)
+ 
+@@ -52,7 +52,7 @@ add_executable(foonathan_memory_test ${tests})
+ comp_target_features(foonathan_memory_test PUBLIC CPP11)
+ target_link_libraries(foonathan_memory_test foonathan_memory)
+ target_include_directories(foonathan_memory_test PRIVATE
+-                            ${CMAKE_CURRENT_BINARY_DIR}
++                            ${CMAKE_CURRENT_SOURCE_DIR}
+                             ${FOONATHAN_MEMORY_SOURCE_DIR}/include/foonathan/memory)
+ 
+ add_test(NAME test COMMAND foonathan_memory_test)

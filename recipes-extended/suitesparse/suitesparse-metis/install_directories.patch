@@ -1,0 +1,31 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,9 @@
+ cmake_minimum_required(VERSION 2.8)
+ project(METIS)
++set (${PROJECT_NAME}_VERSION_MAJOR 5)
++set (${PROJECT_NAME}_VERSION_MINOR 1)
++set (${PROJECT_NAME}_VERSION_PATCH 0)
++set (${PROJECT_NAME}_VERSION_STRING ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_PATCH})
+ 
+ set(GKLIB_PATH "GKlib" CACHE PATH "path to GKlib")
+ set(SHARED FALSE CACHE BOOL "build a shared library")
+--- a/libmetis/CMakeLists.txt
++++ b/libmetis/CMakeLists.txt
+@@ -8,9 +8,13 @@
+   target_link_libraries(metis m)
+ endif()
+ 
++set_target_properties(metis
++  PROPERTIES VERSION ${${PROJECT_NAME}_VERSION_STRING}
++  SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR})
++
+ if(METIS_INSTALL)
+   install(TARGETS metis
+-    LIBRARY DESTINATION lib
+-    RUNTIME DESTINATION lib
+-    ARCHIVE DESTINATION lib)
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif()

@@ -1,0 +1,11 @@
+--- a/SuiteSparse_config.mk
++++ b/SuiteSparse_config.mk
+@@ -358,7 +358,7 @@
+ 
+     ifeq ($(UNAME),Linux)
+         # add the realtime library, librt, and SuiteSparse/lib
+-        LDLIBS += -lrt -Wl,-rpath=$(INSTALL_LIB)
++        LDLIBS += -lrt
+     endif
+ 
+     #---------------------------------------------------------------------------

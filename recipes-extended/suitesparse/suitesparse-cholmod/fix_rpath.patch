@@ -1,0 +1,11 @@
+--- a/Tcov/Makefile
++++ b/Tcov/Makefile
+@@ -30,7 +30,7 @@
+ 
+ # default LAPACK and BLAS from SuiteSparse_config.mk:
+   LDLIBS = -L../../lib \
+-  	-lmetis -lm $(LAPACK) $(BLAS) -lrt -Wl,-rpath=$(SUITESPARSE)/lib
++  	-lmetis -lm $(LAPACK) $(BLAS) -lrt
+ 
+ # LAPACK and the Fortran reference BLAS, compiled with gfortran -g -O:
+ # LDLIBS = $(METIS) -lm -llapack_plain -lblas_plain -lg2c
