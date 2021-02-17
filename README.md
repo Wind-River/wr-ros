@@ -14,14 +14,20 @@ license notice that designates the licensing terms for the respective file.
 
 ## Prerequsisites
 
+```
 URI: git://github.com/ros/meta-ros.git
 branch: zeus
+```
 
+```
 URI: https://github.com/meta-qt5/meta-qt5.git
 branch: zeus
+```
 
+```
 URI: https://github.com/schnitzeltony/meta-qt5-extra.git
 branch: zeus
+```
 
 ## Maintenance
 
@@ -49,8 +55,8 @@ Rob Woolley <rob.woolley@windriver.com>
     ```
     cd layers
     git clone -b zeus https://github.com/ros/meta-ros.git
-    git clone https://github.com/Wind-River/meta-robot
-    git clone -b zeus https://github.com/ros/wr-ros.git
+    git clone https://github.com/Wind-River/meta-robot.git
+    git clone https://github.com/Wind-River/wr-ros.git
     ```
 
 4. (Optional Qt) Add the Qt5 layers
