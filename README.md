@@ -29,6 +29,11 @@ URI: https://github.com/schnitzeltony/meta-qt5-extra.git
 branch: zeus
 ```
 
+```
+URI: https://github.com/IntelRealSense/meta-intel-realsense
+branch: zeus
+```
+
 ## Maintenance
 
 Rob Woolley <rob.woolley@windriver.com>
@@ -57,6 +62,7 @@ Rob Woolley <rob.woolley@windriver.com>
     git clone -b zeus https://github.com/ros/meta-ros.git
     git clone https://github.com/Wind-River/meta-robot.git
     git clone https://github.com/Wind-River/wr-ros.git
+    git clone -b zeus https://github.com/IntelRealSense/meta-intel-realsense.git
     ```
 
 4. (Optional Qt) Add the Qt5 layers
@@ -94,6 +100,7 @@ Rob Woolley <rob.woolley@windriver.com>
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-ros/meta-ros2-foxy
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-ros/meta-ros-backports-dunfell
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/wr-ros
+    bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-intel-realsense
     ```
 
 9. (Optional Qt) Add the Qt5 layers
