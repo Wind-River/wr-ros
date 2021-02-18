@@ -40,22 +40,33 @@ Rob Woolley <rob.woolley@windriver.com>
 
 ## Instructions
 
-1. Download Wind River Linux LTS 19
+1. Download Wind River Linux LTS 19.
 
     Clone the Wind River Linux repository into a new project directory.
     ```
     git clone -b WRLINUX_10_19_BASE https://github.com/WindRiver-Labs/wrlinux-x.git
     ```
 
-2. Configure Wind River Linux in a new build directory
+2. Configure Wind River Linux in a new build directory.
 
     ```
     mkdir wrlinux-ros2
     cd wrlinux-ros2
+    ```
+
+    For Raspberry Pi 4 use:
+
+    ```
     ../wrlinux-x/setup.sh --machines=bcm-2xxx-rpi4 --distros=wrlinux --dl-layers
     ```
 
-3. Add the additional layers
+    For Intel 64 use:
+
+    ```
+    ../wrlinux-x/setup.sh --machines=intel-x86-64 --distros=wrlinux --dl-layers
+    ```
+
+3. Add the additional layers.
 
     ```
     cd layers
@@ -65,36 +76,30 @@ Rob Woolley <rob.woolley@windriver.com>
     git clone -b zeus https://github.com/IntelRealSense/meta-intel-realsense.git
     ```
 
-4. (Optional Qt) Add the Qt5 layers
+4. (Optional Qt) Add the Qt5 layers.
 
     ```
     git clone -b zeus https://github.com/meta-qt5/meta-qt5.git
     git clone -b zeus https://github.com/schnitzeltony/meta-qt5-extra.git
     ```
 
-5. Return to the wrlinux-ros2 directory
+5. Return to the wrlinux-ros2 directory.
     ```
     cd ..
     ```
 
-6. Initialize the build environment
+6. Initialize the build environment.
     ```
-    . environment-setup-x86_64-wrlinuxsdk-linux
-    . oe-init-build-env raspberrypi4-build
-    ```
-
-7. Download and set up ROS Layers
-
-    This section assumes that you have sourced the OpenEmbedded build environment in the previous step.
-
-    ```
-    cd $BUILDDIR
+    . /environment-setup-x86_64-wrlinuxsdk-linux
+    . /oe-init-build-env wrlinux-lts19-ros2
     ```
 
-8. Configure Bitbake layers
+7. Configure Bitbake layers.
     Use bitbake-layers to add the ROS2 layers to your BitBake configuration.
 
+    This section assumes that you have sourced the OpenEmbedded build environment in the previous step.
     ```
+    cd $BUILDDIR
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-ros/meta-ros-common
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-ros/meta-ros2
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-ros/meta-ros2-foxy
@@ -103,27 +108,38 @@ Rob Woolley <rob.woolley@windriver.com>
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-intel-realsense
     ```
 
-9. (Optional Qt) Add the Qt5 layers
+8. (Optional Raspberry Pi 4) Add the rpi-graphics layer for hardware acceleration.
+
+    ```
+    bitbake-layers add-layer ../layers/bcm-2xxx-rpi/rpi-graphics/
+    ```
+
+9. (Optional Qt) Add the Qt5 layers.
     ```
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-qt5
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-qt5-extra
     ```
 
-10. (Optional Qt) Download and patch the unsupported Qt5 integration for Wind River Linux
+10. (Optional Qt) Download and patch the unsupported Qt5 integration for Wind River Linux.
 
     ```
     cd $BUILDDIR/../layers/wrlinux
+
     curl -O https://labs.windriver.com/downloads/0001-wrlinux-template-add-template-qt5-for-wrlinux.patch
     git am 0001-wrlinux-template-add-template-qt5-for-wrlinux.patch
+
     curl -O https://labs.windriver.com/downloads/0002-wrlinux-template-add-lxqt-support-for-wrlinux.patch
     git am 0002-wrlinux-template-add-lxqt-support-for-wrlinux.patch
+
     cd $BUILDDIR/../layers/meta-qt5-extra
+
     curl -O https://labs.windriver.com/downloads/0001-polkit-qt-1-fix-compile-error.patch
     git am 0001-polkit-qt-1-fix-compile-error.patch
+
     cd $BUILDDIR
     ```
 
-11. Modify local configuration
+11. Modify local configuration.
 
     Enable network access for fetching source tarballs and disable all the whitelist layers.
 
@@ -147,12 +163,28 @@ Rob Woolley <rob.woolley@windriver.com>
     INSANE_SKIP_${PN} += "dev-so libdir"
     ```
 
-12. (Optional Qt) Add qt5 to the configuration
+12. (Optional Graphics) Add support for OpenGL graphics with demo examples.
+
+    ```
+    IMAGE_INSTALL_append += "\
+    xserver-xorg \
+    xserver-xorg-extension-glx \
+    mesa \
+    mesa-demos"
+    ```
+
+13. (Optional) For building applications on the device add the following lines.
+    ```
+    IMAGE_INSTALL_append += "\
+    packagegroup-core-buildessential \
+    git"
+    ```
+
+14. (Optional Qt) Add qt5 to the configuration.
 
     Edit the conf/local.conf again to add the following lines:
     ```
-    WRTEMPLATE = "feature/qt5"
-    LICENSE_FLAGS_WHITELIST = "commercial"
+    WRTEMPLATE = "feature/qt5 feature/lxqt"
     ROS_WORLD_SKIP_GROUPS_remove = "world-license"
     ROS_WORLD_SKIP_GROUPS_remove = "turtlebot3"
     ROS_WORLD_SKIP_GROUPS_remove = "qt-gui-cpp"
@@ -160,7 +192,12 @@ Rob Woolley <rob.woolley@windriver.com>
     PACKAGECONFIG_append_pn-qtbase-native = " gui"
     ```
 
-13. Remove webots from packagegroup-ros-world-foxy
+15. Set the license flags whitelist to allow the use of commercial graphics drivers.
+    ```
+    LICENSE_FLAGS_WHITELIST = "commercial"
+    ```
+
+16. Remove webots from packagegroup-ros-world-foxy.
 
     Edit the conf/local.conf again to add the following lines:
     ```
@@ -173,13 +210,22 @@ Rob Woolley <rob.woolley@windriver.com>
     "
     ```
 
-14. Build Wind River Linux standard filesystem
+17. (Optional Raspberry Pi) Edit cmdline.txt to adjust the kernel parameters.
+
+    ```
+    $ cat ../layers/bcm-2xxx-rpi/recipes-bsp/boot-config/boot-config/cmdline.txt
+    dwc_otg.lpm_enable=0 console=serial0,115200 root=/dev/mmcblk0p2 rootfstype=ext4 rootwait ip=dhcp
+    $ echo 'dwc_otg.lpm_enable=0 console=tty root=/dev/mmcblk0p2 rootfstype=ext4 rootwait' > ../layers/bcm-2xxx-rpi/recipes-bsp/boot-config/boot-config/cmdline.txt
+    ```
+    Note: These changes ensure that the console output appears on the HDMI display and that the boot sequence doesn't wait for a DHCP connection.
+
+18. Build Wind River Linux standard filesystem
 
     ```
     bitbake wrlinux-image-std
     ```
 
-15. (Optional Qt) Build Wind River Linux with Qt5
+19. (Optional Graphics) Build Wind River Linux with graphics.
     ```
     bitbake wrlinux-image-std-sato
     ```
