@@ -1,6 +1,6 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
 
-SRC_URI = "git://github.com/foonathan/memory.git;protocol=https;name=main \
+SRC_URI = "git://github.com/foonathan/memory.git;protocol=https;branch=main;name=main \
     git://github.com/foonathan/compatibility.git;protocol=https;name=comp;destsuffix=git/cmake/comp \
     git://github.com/catchorg/Catch2.git;protocol=https;branch=v2.x;name=catch;destsuffix=git/catch-upstream \
     file://catch_header.patch \
