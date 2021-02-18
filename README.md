@@ -90,8 +90,8 @@ Rob Woolley <rob.woolley@windriver.com>
 
 6. Initialize the build environment.
     ```
-    . /environment-setup-x86_64-wrlinuxsdk-linux
-    . /oe-init-build-env wrlinux-lts19-ros2
+    . ./environment-setup-x86_64-wrlinuxsdk-linux
+    . ./oe-init-build-env wrlinux-lts19-ros2
     ```
 
 7. Configure Bitbake layers.
