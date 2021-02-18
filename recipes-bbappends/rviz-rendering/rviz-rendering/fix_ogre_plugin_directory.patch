@@ -1,0 +1,13 @@
+diff --git a/src/rviz_rendering/render_system.cpp b/src/rviz_rendering/render_system.cpp
+index 1765e804..12f00d48 100644
+--- a/src/rviz_rendering/render_system.cpp
++++ b/src/rviz_rendering/render_system.cpp
+@@ -303,7 +303,7 @@ RenderSystem::setPluginDirectory()
+ #ifdef _WIN32
+   set_ogre_plugin_directory(prefix_path + "\\opt\\rviz_ogre_vendor\\bin\\");
+ #else
+-  set_ogre_plugin_directory(prefix_path + "/opt/rviz_ogre_vendor/lib/OGRE/");
++  set_ogre_plugin_directory(prefix_path + "/lib/OGRE/");
+ #endif
+ }
+ 
