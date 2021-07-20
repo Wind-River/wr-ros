@@ -12,39 +12,40 @@ the LICENSE-NOTICES.txt file in the project top level directory. Different
 files may be under different licenses. Each source file should include a
 license notice that designates the licensing terms for the respective file.
 
-## Prerequsisites
+## Prerequisites
 
 ```
 URI: git://github.com/ros/meta-ros.git
-branch: zeus
+branch: hardknott
 ```
 
 ```
 URI: https://github.com/meta-qt5/meta-qt5.git
-branch: zeus
+branch: hardknott
 ```
 
 ```
 URI: https://github.com/schnitzeltony/meta-qt5-extra.git
-branch: zeus
+branch: master
 ```
 
 ```
 URI: https://github.com/IntelRealSense/meta-intel-realsense
-branch: zeus
+branch: hardknott
 ```
 
 ## Maintenance
 
-Rob Woolley <rob.woolley@windriver.com>
+* Maintained by Rob Woolley <rob.woolley@windriver.com>
+* Initial work done by Brendan Engleman
 
 ## Instructions
 
-1. Download Wind River Linux LTS 19.
+1. Download Wind River Linux LTS 21.
 
     Clone the Wind River Linux repository into a new project directory.
     ```
-    git clone -b WRLINUX_10_19_BASE https://github.com/WindRiver-Labs/wrlinux-x.git
+    git clone -b WRLINUX_10_21_BASE https://github.com/WindRiver-Labs/wrlinux-x.git
     ```
 
 2. Configure Wind River Linux in a new build directory.
@@ -70,17 +71,17 @@ Rob Woolley <rob.woolley@windriver.com>
 
     ```
     cd layers
-    git clone -b zeus https://github.com/ros/meta-ros.git
+    git clone -b hardknott https://github.com/ros/meta-ros.git
     git clone https://github.com/Wind-River/meta-robot.git
     git clone https://github.com/Wind-River/wr-ros.git
-    git clone -b zeus https://github.com/IntelRealSense/meta-intel-realsense.git
+    git clone -b hardknott https://github.com/IntelRealSense/meta-intel-realsense.git
     ```
 
 4. (Optional Qt) Add the Qt5 layers.
 
     ```
-    git clone -b zeus https://github.com/meta-qt5/meta-qt5.git
-    git clone -b zeus https://github.com/schnitzeltony/meta-qt5-extra.git
+    git clone -b hardknott https://github.com/meta-qt5/meta-qt5.git
+    git clone -b master https://github.com/schnitzeltony/meta-qt5-extra.git
     ```
 
 5. Return to the wrlinux-ros2 directory.
@@ -91,7 +92,7 @@ Rob Woolley <rob.woolley@windriver.com>
 6. Initialize the build environment.
     ```
     . ./environment-setup-x86_64-wrlinuxsdk-linux
-    . ./oe-init-build-env wrlinux-lts19-ros2
+    . ./oe-init-build-env wrlinux-lts21-ros2
     ```
 
 7. Configure Bitbake layers.
@@ -102,16 +103,9 @@ Rob Woolley <rob.woolley@windriver.com>
     cd $BUILDDIR
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-ros/meta-ros-common
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-ros/meta-ros2
-    bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-ros/meta-ros2-foxy
-    bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-ros/meta-ros-backports-dunfell
+    bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-ros/meta-ros2-galactic
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/wr-ros
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-intel-realsense
-    ```
-
-8. (Optional Raspberry Pi 4) Add the rpi-graphics layer for hardware acceleration.
-
-    ```
-    bitbake-layers add-layer ../layers/bcm-2xxx-rpi/rpi-graphics/
     ```
 
 9. (Optional Qt) Add the Qt5 layers.
@@ -120,7 +114,7 @@ Rob Woolley <rob.woolley@windriver.com>
     bitbake-layers add-layer $(readlink -f $BUILDDIR/../layers)/meta-qt5-extra
     ```
 
-10. (Optional Qt) Download and patch the unsupported Qt5 integration for Wind River Linux.
+10. (Optional Qt) Download and patch the unsupported Qt5 integration for Wind River Linux.  XXX probably not needed
 
     ```
     cd $BUILDDIR/../layers/wrlinux
@@ -184,12 +178,17 @@ Rob Woolley <rob.woolley@windriver.com>
 
     Edit the conf/local.conf again to add the following lines:
     ```
-    WRTEMPLATE = "feature/qt5 feature/lxqt"
+    WRTEMPLATE = "feature/qtbase"
     ROS_WORLD_SKIP_GROUPS_remove = "world-license"
     ROS_WORLD_SKIP_GROUPS_remove = "turtlebot3"
     ROS_WORLD_SKIP_GROUPS_remove = "qt-gui-cpp"
     ROS_WORLD_SKIP_GROUPS_remove = "world-license-faad"
     PACKAGECONFIG_append_pn-qtbase-native = " gui"
+    ```
+15. (Optional Qt) Temporarily skip qt5 and gazebo to workaround a build failure with gazebo-ros-pkgs.
+    ```
+    ROS_WORLD_SKIP_GROUPS += " qt5"
+    # ROS_WORLD_SKIP_GROUPS_remove = "gazebo"
     ```
 
 15. Set the license flags whitelist to allow the use of commercial graphics drivers.
@@ -197,13 +196,13 @@ Rob Woolley <rob.woolley@windriver.com>
     LICENSE_FLAGS_WHITELIST = "commercial"
     ```
 
-16. Remove webots from packagegroup-ros-world-foxy.
+16. Remove webots from packagegroup-ros-world-galactic.
 
     Edit the conf/local.conf again to add the following lines:
     ```
     ROS_WORLD_SKIP_GROUPS += "webots-python-modules"
 
-    RDEPENDS_packagegroup-ros-world-foxy_remove += " \
+    RDEPENDS_packagegroup-ros-world-galactic_remove += " \
         webots-ros2-epuck \
         webots-ros2-tiago \
         webots-ros2-universal-robot \
@@ -213,9 +212,12 @@ Rob Woolley <rob.woolley@windriver.com>
 17. (Optional Raspberry Pi) Edit cmdline.txt to adjust the kernel parameters.
 
     ```
-    $ cat ../layers/bcm-2xxx-rpi/recipes-bsp/boot-config/boot-config/cmdline.txt
-    dwc_otg.lpm_enable=0 console=serial0,115200 root=/dev/mmcblk0p2 rootfstype=ext4 rootwait ip=dhcp
-    $ echo 'dwc_otg.lpm_enable=0 console=tty root=/dev/mmcblk0p2 rootfstype=ext4 rootwait' > ../layers/bcm-2xxx-rpi/recipes-bsp/boot-config/boot-config/cmdline.txt
+    $ cat ../layers/bcm-2xxx-rpi/recipes-bsp/bootfiles/rpi-cmdline.bbappend
+    CMDLINE_bcm-2xxx-rpi4 = "${@bb.utils.contains("DISTRO_FEATURES", "ostree", "dwc_otg.lpm_enable=0 rootwait", \
+                        "dwc_otg.lpm_enable=0 console=serial0,115200 root=/dev/mmcblk0p2 rootfstype=ext4 rootwait ip=dhcp", d)}"
+
+    PACKAGE_ARCH_bcm-2xxx-rpi4 = "${MACHINE_ARCH}"
+    $ sed -i -e 's/ ip=dhcp//' ../layers/bcm-2xxx-rpi/recipes-bsp/bootfiles/rpi-cmdline.bbappend
     ```
     Note: These changes ensure that the console output appears on the HDMI display and that the boot sequence doesn't wait for a DHCP connection.
 
