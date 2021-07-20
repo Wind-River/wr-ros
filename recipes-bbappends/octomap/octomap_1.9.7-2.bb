@@ -2,7 +2,7 @@
 #
 # Copyright Open Source Robotics Foundation
 
-inherit ros_distro_foxy
+inherit ros_distro_galactic
 inherit ros_superflore_generated
 
 DESCRIPTION = "The OctoMap library implements a 3D occupancy grid mapping approach, providing data structures and mapping algorithms in C++. The map implementation is based on an octree. See   http://octomap.github.io for details."
@@ -26,7 +26,9 @@ ROS_EXPORT_DEPENDS = ""
 
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
-ROS_EXEC_DEPENDS = ""
+ROS_EXEC_DEPENDS = " \
+    ament-cmake \
+"
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
 ROS_TEST_DEPENDS = ""
@@ -38,10 +40,10 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
 RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
 
-# matches with: https://github.com/ros-gbp/octomap-release/archive/release/foxy/octomap/1.9.5-2.tar.gz
-ROS_BRANCH ?= "branch=release/foxy/octomap"
+# matches with: https://github.com/ros-gbp/octomap-release/archive/release/galactic/octomap/1.9.7-1.tar.gz
+ROS_BRANCH ?= "branch=release/galactic/octomap"
 SRC_URI = "git://github.com/ros-gbp/octomap-release;${ROS_BRANCH};protocol=https"
-SRCREV = "c6d4b71ac137193310a220e2c6935fb4635c2a3f"
+SRCREV = "066b88de7ef6b8deafa1dce5db0f83186263fc61"
 S = "${WORKDIR}/git"
 
 ROS_BUILD_TYPE = "cmake"
