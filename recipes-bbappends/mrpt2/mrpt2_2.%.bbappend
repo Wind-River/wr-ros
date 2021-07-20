@@ -1,7 +1,9 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += "file://disable-host-system-dirs.patch \
-            file://enable-linking-octomap.patch"
+            file://enable-linking-octomap.patch \
+            file://0001-mrpt2-gui-pthread.patch \
+            file://0002-fix-debian-bug-unambiguous-tracking.patch"
 
 inherit pkgconfig
 

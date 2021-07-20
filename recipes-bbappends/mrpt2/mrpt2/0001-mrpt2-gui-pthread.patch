@@ -1,0 +1,10 @@
+diff --git a/libs/gui/CMakeLists.txt b/libs/gui/CMakeLists.txt
+index e551b17..aadf1e5 100644
+--- a/libs/gui/CMakeLists.txt
++++ b/libs/gui/CMakeLists.txt
+@@ -65,4 +65,5 @@ if(BUILD_mrpt-gui)
+ 		target_link_libraries(gui PUBLIC mrpt::nanogui)
+ 	endif()
+ 
++	target_link_libraries(gui PRIVATE Threads::Threads)
+ endif()
