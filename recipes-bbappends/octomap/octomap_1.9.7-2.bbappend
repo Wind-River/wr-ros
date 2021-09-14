@@ -31,6 +31,9 @@ inherit ros_insane_dev_so
 # octomap: /usr/bin/eval_octree_accuracy contains probably-redundant RPATH /usr/lib [useless-rpaths]
 DEPENDS_append_class-target = " chrpath-replacement-native"
 do_install_append() {
-    chrpath --delete ${D}${bindir}/* ${D}${nonarch_libdir}/*${SOLIBS}
+    chrpath --delete ${D}${bindir}/* ${D}${libdir}/*${SOLIBS}
 }
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
+SRC_URI += "file://revert_libdir.patch"
